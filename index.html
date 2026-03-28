@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pond今天追到老婆了吗？</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #ffe0b5 0%, #ffb77c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .game-wrapper {
+            max-width: 700px;
+            width: 100%;
+            background: #fffef7;
+            border-radius: 48px 32px 56px 32px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px #ffd9a5 inset;
+            overflow: hidden;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        /* 年龄遮罩 */
+        .age-gate {
+            position: relative;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            padding: 30px 24px;
+            text-align: center;
+            border-radius: inherit;
+            z-index: 20;
+        }
+        .age-card {
+            background: #fff3e6;
+            border-radius: 48px;
+            padding: 28px 24px;
+            max-width: 90%;
+            margin: 0 auto;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border: 2px solid #ffbc7a;
+        }
+        .age-card h2 {
+            margin: 0 0 12px 0;
+            color: #b45f2b;
+            font-size: 1.8rem;
+        }
+        .age-card p {
+            color: #4f2f1a;
+            line-height: 1.5;
+            margin: 16px 0;
+        }
+        .age-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .age-btn {
+            background: #c1814b;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 3px 0 #7a4a25;
+        }
+        .age-btn:hover {
+            background: #a56536;
+            transform: translateY(-2px);
+        }
+        .age-btn:active {
+            transform: translateY(2px);
+        }
+        .age-btn.secondary {
+            background: #6f4a2e;
+        }
+
+        .game-content {
+            display: none;
+        }
+
+        /* 数值面板 */
+        .stats-panel {
+            background: #2c2418;
+            background: linear-gradient(135deg, #30271c, #221d12);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 3px solid #c9aa4b;
+            color: #f9e7c2;
+            text-shadow: 0 1px 2px black;
+            font-weight: bold;
+        }
+        .stat {
+            background: #1f1910;
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: inset 0 1px 0 #5f4a2a, 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .stat span:first-child {
+            font-family: monospace;
+            font-weight: 600;
+            color: #ecc46e;
+        }
+        .stat span:last-child {
+            font-weight: 800;
+            font-size: 1.1rem;
+            min-width: 40px;
+            text-align: center;
+            color: #ffd966;
+        }
+
+        .story-area {
+            padding: 20px 24px 16px;
+            background: #fffaf3;
+            border-bottom: 2px solid #ffe0c0;
+        }
+        .story-text {
+            font-size: 1.05rem;
+            line-height: 1.55;
+            color: #3e2a2a;
+            font-weight: 500;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .image-area {
+            margin-top: 16px;
+            text-align: center;
+            background: #f9ebdd;
+            border-radius: 28px;
+            padding: 10px;
+            border: 1px dashed #e2bc8c;
+        }
+        .story-img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .options-area {
+            padding: 16px 24px 28px;
+            background: #fff5ea;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-btn {
+            background: #f0c8a0;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            color: #4b2f1a;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 0 #c2966b;
+            border: 1px solid #ffe0b5;
+        }
+        .option-btn:hover {
+            background: #ffdbb5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0 #c2966b;
+        }
+        .option-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #c2966b;
+        }
+        .reset-btn {
+            background: #b97f57;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #fff0df;
+            cursor: pointer;
+            margin: 0 24px 20px auto;
+            display: inline-block;
+            width: fit-content;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: 0.1s;
+        }
+        .reset-btn:hover {
+            background: #9b623f;
+            transform: scale(0.97);
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            background: #fff5ea;
+            padding-top: 0;
+        }
+
+        /* 浮动提示 */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2e241c;
+            color: #ffefcf;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        @media (max-width: 550px) {
+            .story-text { font-size: 0.96rem; }
+            .option-btn { padding: 8px 12px; font-size: 0.9rem; }
+            .stats-panel { padding: 10px 16px; }
+            .stat { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-wrapper" id="gameWrapper">
+    <!-- 年龄确认遮罩 -->
+    <div id="ageGate" class="age-gate">
+        <div class="age-card">
+            <h2>⚠️ 温馨提醒</h2>
+            <p>本游戏纯属虚构，如有雷同纯属巧合。<br>
+            故事中所有角色均已成年，剧情仅为娱乐创作。<br>
+            <strong>请确保您已年满18周岁，再开始游玩。</strong></p>
+            <div class="age-buttons">
+                <button class="age-btn" id="confirmAdult">✅ 是，我已成年</button>
+                <button class="age-btn secondary" id="rejectAdult">❌ 否，我未成年</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏主内容 -->
+    <div id="gameContent" class="game-content">
+        <!-- 数值面板 -->
+        <div class="stats-panel">
+            <div class="stat">💖 Phuwin好感度 <span id="likeValue">0</span></div>
+            <div class="stat">⭐ 系统积分 <span id="pointsValue">0</span></div>
+        </div>
+        <div class="story-area">
+            <div class="story-text" id="storyText">
+                加载系统中...
+            </div>
+            <div id="imageContainer" class="image-area" style="display: none;"></div>
+        </div>
+        <div class="options-area" id="optionsContainer"></div>
+        <div class="footer">
+            <button class="reset-btn" id="resetGameBtn">🔄 重开旅程</button>
+        </div>
+    </div>
+</div>
+<div id="toastMsg" class="toast-msg"></div>
+
+<script>
+    // ======================= 游戏状态 =======================
+    let currentSceneId = "scene1";
+    let phuwinLike = 0;      // 好感度初始0
+    let systemPoints = 0;    // 积分初始0
+
+    // 背景音乐 (场景4)
+    let bgmAudio = null;
+
+    // 辅助函数
+    function updateUI() {
+        document.getElementById("likeValue").innerText = phuwinLike;
+        document.getElementById("pointsValue").innerText = systemPoints;
+    }
+
+    function showToast(msg, duration = 2000) {
+        const toast = document.getElementById("toastMsg");
+        toast.innerText = msg;
+        toast.style.opacity = "1";
+        setTimeout(() => {
+            toast.style.opacity = "0";
+        }, duration);
+    }
+
+    // 修改好感度并显示提示
+    function modifyLike(delta) {
+        if (delta === 0) return;
+        phuwinLike += delta;
+        phuwinLike = Math.min(100, Math.max(0, phuwinLike));
+        updateUI();
+        if (delta > 0) showToast(`💖 好感度 +${delta}`);
+        else if (delta < 0) showToast(`💔 好感度 ${delta}`);
+    }
+
+    // 修改积分并显示提示
+    function modifyPoints(delta) {
+        if (delta === 0) return;
+        systemPoints += delta;
+        systemPoints = Math.max(0, systemPoints);
+        updateUI();
+        if (delta > 0) showToast(`⭐ 积分 +${delta}`);
+        else if (delta < 0) showToast(`⭐ 积分 ${delta}`);
+    }
+
+    // 初始化音频
+    function initAudio() {
+        if (!bgmAudio) {
+            bgmAudio = new Audio("bgm3.mp3");
+            bgmAudio.loop = true;
+            bgmAudio.volume = 0.5;
+        }
+    }
+    function updateBGM(sceneId) {
+        if (sceneId === "scene4") {
+            if (bgmAudio && bgmAudio.paused) {
+                bgmAudio.play().catch(e => console.log("自动播放需用户交互"));
+            }
+        } else {
+            if (bgmAudio && !bgmAudio.paused) {
+                bgmAudio.pause();
+                bgmAudio.currentTime = 0;
+            }
+        }
+    }
+
+    // 图片渲染
+    function renderImage(scene) {
+        const imgContainer = document.getElementById("imageContainer");
+        if (!scene.image) {
+            imgContainer.style.display = "none";
+            imgContainer.innerHTML = "";
+            return;
+        }
+        imgContainer.style.display = "block";
+        const filename = scene.image.filename;
+        imgContainer.innerHTML = `<img class="story-img" src="${filename}" alt="角色图片" style="max-width:100%;" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23eeddcc\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23945e38\' font-size=\'14\'%3E图片未找到：${filename}%3C/text%3E%3C/svg%3E';">`;
+    }
+
+    // ======================= 场景库（完整更新版）=======================
+    const scenes = {
+        scene1: {
+            desc: "你作为泡泡碗宇宙中的一名咸鱼系统，业绩已连续三年蝉联最低，主神勒令你今年必须撮合一段完美姻缘，你决定：",
+            image: null,
+            options: [
+                { text: "💪 奋发图强！", nextScene: "scene2" },
+                { text: "🌾 继续摆烂…", nextScene: "ending_farm" }
+            ]
+        },
+        ending_farm: {
+            desc: "🌾 你因业绩年年垫底，被主神开除，失去了工作，只好回家种田。\n\n田里的水稻长势一般，你望着夕阳，心中满是后悔……\n\n【游戏结局 · 咸鱼归田】",
+            image: null,
+            options: []
+        },
+        scene2: {
+            desc: "你决定奋发图强，一定要做出点业绩来给主神看看！你辗转了不少小世界，都没有找到一个心仪的宿主。你漫无目的闲逛，终于……\n\n你在一个世界中，看到一个十九岁的少年，他正在参加一个选秀节目，穿着白色外套和橘色笑脸的内搭，虽然看着有些憨傻，但是跳舞的时候格外有魅力，毫不意外的，他获得了这次选秀的冠军，你决定选择他作为你的宿主。\n\n✨ 宿主资料卡 ✨\n姓名：Naravit Lertratkosum\n昵称：Pond\n身高：185cm\n体重：75kg\n生日：2001.02.01\n血型：A\n喜欢的颜色：灰\n喜欢的数字：4\n大学：泰国先皇理工大学",
+            image: {
+                type: "pond_card",
+                filename: "pond1.jpg"
+            },
+            options: [
+                { text: "📋 继续", nextScene: "scene3" }
+            ]
+        },
+        scene3: {
+            desc: "现在，你手上有四个人选可以作为宿主 Pond 的攻略对象，请选择你认为最有可能跟宿主成就一段美满姻缘的人：",
+            image: null,
+            options: [
+                { text: "💘 Phuwin", nextScene: "scene5" },
+                { text: "💘 Dunk", nextScene: "scene4" },
+                { text: "💘 Fourth", nextScene: "scene4" },
+                { text: "💘 Santa", nextScene: "scene4" }
+            ]
+        },
+        scene4: {
+            desc: "在你即将要做出选择的时候，突然有一个和宿主很像，但看着年长一些的男人冲了出来，嘴里还大喊着“I don't like ghostship！PondPhuwin Only。”就把你撞晕了。\n\n你迷迷糊糊醒来，发现自己不得不重新选择攻略对象。",
+            image: null,
+            options: [{ text: "🔁 重新选择攻略对象", nextScene: "scene3" }]
+        },
+        scene5: {
+            desc: "你很有眼光。\n\n✨ 被攻略者资料卡 ✨\n姓名：Phuwin Tangsakyuen\n昵称：Phuwin\n身高：180cm\n体重：67kg\n生日：2003.07.05\n血型：AB\n喜欢的颜色：深黑、深灰、白\n喜欢的数字：6、8\n大学：朱拉隆功大学",
+            image: {
+                type: "phuwin_card",
+                filename: "phuwin1.jpg"
+            },
+            options: [
+                { text: "➡️ 继续", nextScene: "scene6" }
+            ]
+        },
+        scene6: {
+            desc: "现在，你飘到了宿主的脑中，他被脑海中突如其来的陌生声音吓了一跳，你向他说明了你的来意，并许诺他攻略任务完成后，他会获得一定的奖励，你准备选择什么样的奖励，来引诱宿主与你完成绑定：",
+            image: null,
+            options: [
+                { text: "💰 500w 泰铢", nextScene: "scene7" },
+                { text: "🕷️ 变成蜘蛛侠", nextScene: "scene8" },
+                { text: "🎤 和喜欢的偶像共度晚餐", nextScene: "scene9" },
+                { text: "💑 拥有一个完美的老婆", nextScene: "scene10" }
+            ]
+        },
+        scene7: {
+            desc: "宿主脸上露出了震惊的表情，他虽然很想要这500w，但挣扎了一番，最终还是朝你摇了摇头，并对你说道：“钱我自己也能挣”。\n\n看来这个奖励不够诱人，再试试别的吧。",
+            image: null,
+            options: [{ text: "🔙 重新选择奖励", nextScene: "scene6" }]
+        },
+        scene8: {
+            desc: "宿主觉得你是个疯子，但发现摆脱不掉你的声音后，他觉得是自己疯了，担惊受怕地去看了心理医生。\n\n你的系统差点被举报，赶紧换个正常点的奖励吧。",
+            image: null,
+            options: [{ text: "🔙 重新选择奖励", nextScene: "scene6" }]
+        },
+        scene9: {
+            desc: "“这根本不算什么奖励嘛。”宿主抱怨着。\n\n他虽然追星但这个奖励也太儿戏了，看来你需要拿出更有吸引力的方案。",
+            image: null,
+            options: [{ text: "🔙 重新选择奖励", nextScene: "scene6" }]
+        },
+        scene10: {
+            desc: "你找了一张 Phuwin 成年后的照片给宿主看，告诉他这就是和你绑定以后，系统给他分配的老婆，宿主没有说话，不知道在想些什么，随后忽然咧开嘴笑了，笑得很不好意思地捂住了嘴，在你有些怀疑自己是否要换个宿主的时候，他答应了你的绑定。",
+            image: {
+                type: "phuwin_photo",
+                filename: "phuwin.jpg"
+            },
+            options: [
+                { text: "🎉 绑定成功，继续旅程", nextScene: "scene11" }
+            ]
+        },
+
+
+        // ==================== 新剧情 场景11~26 ====================
+        scene11: {
+            desc: "作为选秀出道的冠军，宿主获得了公司给予的奖励，你决定劝说宿主选取哪个奖励：",
+            image: null,
+            options: [
+                { text: "🎤 演唱热门电视剧的主题曲", nextScene: "scene12" },
+                { text: "🎬 出演青春校园电视剧的主角", nextScene: "scene14" },
+                { text: "👥 和公司其他成员组成男团", nextScene: "scene13" }
+            ]
+        },
+        scene12: {
+            desc: "宿主成功演唱了热门电视剧的主题曲，但由于你没有提前做好调研，宿主错过了与Phuwin认识的机会，Phuwin成了别人的搭档，Pond孤独终老。\n\n【达成结局：你到底怎么当系统的？】",
+            image: null,
+            options: [
+                { text: "🔄 重试（回到场景11）", nextScene: "scene11" }
+            ]
+        },
+        scene13: {
+            desc: "宿主成功和公司其他成员组成男团jasper，并成为了团内的rapper，但由于你没有提前做好调研，宿主错过了与Phuwin认识的机会，Phuwin成了别人的搭档，Pond孤独终老。\n\n【达成结局：你到底怎么当系统的？】",
+            image: null,
+            options: [
+                { text: "🔄 重试（回到场景11）", nextScene: "scene11" }
+            ]
+        },
+        scene14: {
+            desc: "作为一个优秀的系统，你当然提前做好了调查，公司作为奖励准备的剧本《天上的鱼》，Phuwin也会参与选角，你当然要劝说宿主选这个咯。",
+            image: null,
+            options: [
+                { text: "📖 选择《天上的鱼》", nextScene: "scene15" }
+            ]
+        },
+        scene15: {
+            desc: "现在你要向你的宿主发布第一条任务了。\n\n任务：和Phuwin在电视剧《天上的鱼》中成为搭档。\n（奖励获得积分：10）",
+            image: null,
+            options: [
+                { text: "📢 发布任务", nextScene: "scene16" }
+            ]
+        },
+        scene16: {
+            desc: "“积分？”",
+            image: null,
+            options: [
+                { text: "📘 解释积分系统", nextScene: "scene17" }
+            ]
+        },
+        scene17: {
+            desc: "“对哒宿主，完成任务可以获得一定积分，积分可以在系统商城换取道具哦，可能是会是您达成攻略目标的关键道具。作为新手奖励，奖励了您10积分。”你向宿主解释道积分的作用。",
+            image: null,
+            options: [
+                { text: "✨ 领取新手奖励", nextScene: "scene17_5", onSelect: () => { modifyPoints(10); } }
+            ]
+        },
+        // 新增场景：第一次见面获得基础好感
+        scene17_5: {
+            desc: "你和宿主正式开始了攻略之旅。第一次与 Phuwin 见面，Phuwin 对 Pond 留下了不错的印象，好感度提升了。",
+            image: null,
+            options: [
+                { text: "💕 继续", nextScene: "scene18", onSelect: () => { modifyLike(20); } }
+            ]
+        },
+        scene18: {
+            desc: "很快到了电视剧选角的这一天，宿主第一次看到Phuwin，吓了一跳，嘴巴里不停地跟你念叨，“这么小”“完全还是小孩子嘛”“这怎么能当老婆啊”“这是在犯罪”。再这样下去，宿主要被别人当成精神病了，只好安抚宿主道：",
+           image: {
+                type: "phuwin",
+                filename: "phuwin2.jpg"
+            },
+            options: [
+                { text: "💬 攻略不要时间的吗？现在还小，过两年长开了就好了。", nextScene: "scene19" },
+                { text: "📸 你忘了我给你看的照片了吗？长大后会变成这样哦。", nextScene: "scene20" },
+                { text: "🍼 小点怎么了？小点好养啊！", nextScene: "scene21" }
+            ]
+        },
+        scene19: {
+            desc: "宿主总算是被你安抚了下来。",
+            image: null,
+            options: [{ text: "➡️ 继续", nextScene: "scene22" }]
+        },
+        scene20: {
+            desc: "宿主总算是被你安抚了下来，可能是回想起了当初你给他看到的那张照片，宿主望向Phuwin，有些害羞地笑了，恰好被Phuwin看到。",
+            image: null,
+            options: [{ text: "➡️ 继续", nextScene: "scene22", onSelect: () => { modifyLike(5); } }]
+        },
+        scene21: {
+            desc: "宿主完全没有被你安慰道，反而一直再说“这是未成年弟弟啊”“不行的”“没法当老婆啊”，宿主怪异的样子被Phuwin看到，对方似乎觉得宿主是个怪人。你只好再次劝说宿主，才将宿主安抚下来。",
+            image: null,
+            options: [{ text: "➡️ 继续", nextScene: "scene22", onSelect: () => { modifyLike(-5); } }]
+        },
+        scene22: {
+            desc: "导演一开始想要给宿主选的搭档是Winny，这可不行。你凑到宿主耳边，非常大声地说到：搞砸他！",
+            image: null,
+            options: [{ text: "🗣️ 搞砸试戏！", nextScene: "scene23" }]
+        },
+        scene23: {
+            desc: "等到试戏的时候，你发现宿主根本不用刻意搞砸，因为无论他和谁演对手戏，他都会不停地笑场，导演不得已，让在场的所有演员都和宿主试戏，很快就轮到Phuwin了，你有些焦虑。\n\n是否推荐宿主使用商城道具：高冷男神药丸（消耗积分 10）\n效果：效如其名，服用后秒变高冷男神，货真价实，童叟无欺。",
+            image: null,
+            options: [
+                { text: "✅ 是，使用药丸", nextScene: "scene24", condition: () => systemPoints >= 10 },
+                { text: "❌ 否，相信宿主", nextScene: "scene25" }
+            ]
+        },
+        scene24: {
+            desc: "宿主选择使用高冷男神药丸，商城积分-10，服用了药丸后的宿主果然冷静了下来，两人开始对戏，你看着宿主低头望着Phuwin，说着剧里的经典台词，“你也是我天上的鱼”，眼里是mork对pee终于言明的爱恋与坚定，Phuwin的沉默与触动，两个人之间有一种别样的情愫流转。你感觉得意极了，果然，以前你只是摆烂，要认真工作起来，果然能撮合到最美妙的姻缘啊。",
+            image: null,
+            options: [{ text: "✨ 继续", nextScene: "scene26", onSelect: () => { modifyPoints(-10); modifyLike(5); } }]
+        },
+        scene25: {
+            desc: "如果一开始都要动用积分来解决问题的话，那还是别攻略了，你这样想着。虽然没有道具帮助，但是意外的，宿主对上Phuwin后竟然冷静了下来，两人开始对戏，你看着宿主低头望着Phuwin，说着剧里的经典台词，“你也是我天上的鱼”，眼里是mork对pee终于言明的爱恋与坚定，Phuwin的沉默与触动，两个人之间有一种别样的情愫流转。你感觉得意极了，果然，以前你只是摆烂，要认真工作起来，果然能撮合到最美妙的姻缘啊。",
+            image: null,
+            options: [{ text: "✨ 继续", nextScene: "scene26", onSelect: () => { modifyLike(5); } }]
+        },
+        scene26: {
+            // 动态描述，在渲染时生成
+            desc: "",
+            image: null,
+            options: []
+        }
+    };
+
+    // 辅助：检查条件选项
+    function getAvailableOptions(scene) {
+        if (!scene.options) return [];
+        return scene.options.filter(opt => {
+            if (opt.condition && !opt.condition()) return false;
+            return true;
+        });
+    }
+
+    // 渲染当前场景
+    function renderScene() {
+        const scene = scenes[currentSceneId];
+        if (!scene) {
+            currentSceneId = "scene1";
+            renderScene();
+            return;
+        }
+
+        // 特殊处理scene26动态文本
+        let displayDesc = scene.desc;
+        if (currentSceneId === "scene26") {
+            displayDesc = `🎉 第一章 · 初遇篇 完成 🎉\n\nPond和Phuwin的缘分从《天上的鱼》开始悄然萌发。\n\n当前好感度：${phuwinLike}，积分：${systemPoints}\n\n更多精彩剧情，敬请期待后续篇章！\n（游戏待续，可重置重玩）`;
+        }
+
+        document.getElementById("storyText").innerText = displayDesc;
+        renderImage(scene);
+        updateBGM(currentSceneId);
+
+        const optionsContainer = document.getElementById("optionsContainer");
+        optionsContainer.innerHTML = "";
+
+        const available = getAvailableOptions(scene);
+        if (available.length === 0) {
+            const msg = document.createElement("div");
+            msg.style.textAlign = "center";
+            msg.style.padding = "12px";
+            msg.style.color = "#b87a4b";
+            msg.style.fontStyle = "italic";
+            msg.innerText = "🏁 故事已抵达终点 🏁\n点击下方「重开旅程」开启新篇章";
+            optionsContainer.appendChild(msg);
+            return;
+        }
+
+        available.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = opt.text;
+            btn.addEventListener("click", () => {
+                if (opt.onSelect) opt.onSelect();
+                if (opt.nextScene) {
+                    currentSceneId = opt.nextScene;
+                    renderScene();
+                }
+            });
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function resetGame() {
+        phuwinLike = 0;
+        systemPoints = 0;
+        updateUI();
+        currentSceneId = "scene1";
+        renderScene();
+    }
+
+    // 年龄确认及初始化
+    const ageGate = document.getElementById("ageGate");
+    const gameContent = document.getElementById("gameContent");
+    const confirmBtn = document.getElementById("confirmAdult");
+    const rejectBtn = document.getElementById("rejectAdult");
+
+    confirmBtn.addEventListener("click", () => {
+        initAudio();
+        ageGate.style.display = "none";
+        gameContent.style.display = "block";
+        resetGame();
+    });
+
+    rejectBtn.addEventListener("click", () => {
+        const ageCard = ageGate.querySelector(".age-card");
+        ageCard.innerHTML = `
+            <h2>🚫 无法进入游戏</h2>
+            <p>根据相关规定，未满18周岁不能游玩本游戏。<br>
+            祝您健康成长，待成年后再来体验。</p>
+            <button class="age-btn" id="backToAgeCheck">◀ 返回重试</button>
+        `;
+        document.getElementById("backToAgeCheck").addEventListener("click", () => location.reload());
+    });
+
+    document.addEventListener("click", (e) => {
+        if (e.target.id === "resetGameBtn") resetGame();
+    });
+
+    ageGate.style.display = "block";
+    gameContent.style.display = "none";
+    updateUI();
+</script>
+</body>
+</html>
